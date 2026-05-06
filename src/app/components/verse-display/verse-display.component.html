@@ -1,0 +1,95 @@
+<div class="verse-container">
+  <!-- Header -->
+  <div class="verse-header">
+    <button class="back-btn" (click)="goBack()" title="Go back">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <div class="header-content">
+      <h1>{{ chapterName }}</h1>
+      <p class="verse-subtitle">Chapter {{ chapterId }}</p>
+    </div>
+    <div class="header-space"></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-section">
+    <!-- Search Bar -->
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        placeholder="Search verses..."
+        [(ngModel)]="searchQuery"
+        (input)="searchVerses()"
+        class="search-input"
+      />
+      <button
+        *ngIf="searchQuery"
+        (click)="clearSearch()"
+        class="clear-btn"
+        title="Clear search"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Translator Selection -->
+    <div class="translator-selector">
+      <label for="translator">Translator:</label>
+      <select
+        id="translator"
+        [(ngModel)]="selectedTranslation"
+        (change)="onTranslationChange()"
+        class="translator-dropdown"
+      >
+        <option value="" disabled>Select translator</option>
+        <option *ngFor="let trans of translations" [value]="trans.identifier">
+          {{ trans.englishName || trans.name }}
+        </option>
+      </select>
+      <div *ngIf="isLoadingTranslations" class="loading-spinner-small">
+        <i class="fas fa-spinner"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading verses...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Verses List -->
+  <div *ngIf="!isLoading && !error" class="verses-list">
+    <div *ngIf="filteredVerses.length === 0" class="no-results">
+      <i class="fas fa-search"></i>
+      <p>No verses found matching your search.</p>
+    </div>
+
+    <div
+      *ngFor="let verse of filteredVerses"
+      class="verse-card"
+    >
+      <div class="verse-number">{{ verse.numberInSurah || verse.ayahNumber }}</div>
+
+      <div class="verse-content">
+        <!-- Arabic Text -->
+        <div class="arabic-text">
+          {{ verse.text || 'Text not available' }}
+        </div>
+
+        <!-- Translation -->
+        <div class="translation-text">
+          <strong>Translation:</strong>
+          {{ getTranslationText(verse) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

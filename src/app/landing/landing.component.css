@@ -541,7 +541,8 @@
 }
 
 .footer-logo-icon i {
-  font-size: 1
+  font-size: 1.25rem;
+}
 
 .footer-logo .logo-icon {
   width: 2rem;

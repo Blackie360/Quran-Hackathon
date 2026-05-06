@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Feature {
   iconClass: string;
@@ -55,10 +56,16 @@ export class LandingComponent {
     }
   ]);
 
+  constructor(private router: Router) {}
+
   scrollToFeatures(): void {
     const element = document.getElementById('features');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  getStarted(): void {
+    this.router.navigate(['/chapters']);
   }
 }

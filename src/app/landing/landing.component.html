@@ -10,7 +10,7 @@
 
     <div class="navbar-menu">
       <button class="nav-link" (click)="scrollToFeatures()">Features</button>
-      <button class="nav-cta">
+      <button class="nav-cta" (click)="getStarted()">
         <i class="fas fa-rocket"></i> Get Started
       </button>
     </div>
@@ -34,7 +34,7 @@
         </p>
 
         <div class="hero-buttons">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" (click)="getStarted()">
             <i class="fas fa-rocket"></i> Start Exploring
           </button>
           <button class="btn btn-outline">
@@ -79,7 +79,7 @@
               "Indeed, Allah loves those who are repentant and loves those who purify themselves"
             </p>
 
-            <button class="btn btn-primary" style="width: 100%;">
+            <button class="btn btn-primary" style="width: 100%;" (click)="getStarted()">
               Explore More
             </button>
           </div>
@@ -253,3 +253,4 @@
 
   </div>
 </footer>
+
