@@ -7,31 +7,45 @@ export class AuthService {
   private http = inject(HttpClient);
   private token = signal<string | null>(null);
 
-  // Credentials from Quran.Foundation Dashboard
-  private readonly CLIENT_ID = 'YOUR_X_CLIENT_ID';
-  private readonly CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
+  private readonly CLIENT_ID = 'bc24919c-3fb9-4985-8746-8a42fc145de1';
+  private readonly CLIENT_SECRET = 'z70ITf1b6FEN6wHVUgFqQvqy.9';
 
   async fetchToken(): Promise<string> {
+    if (this.token()) {
+      return this.token()!;
+    }
+
     const payload = new HttpParams()
       .set('grant_type', 'client_credentials')
       .set('scope', 'content');
 
+    const url = '/auth-api/oauth2/token';
+
     const authHeader = 'Basic ' + btoa(`${this.CLIENT_ID}:${this.CLIENT_SECRET}`);
 
-    const res: any = await firstValueFrom(
-      this.http.post('https://auth.quran.foundation/oauth2/token', payload, {
-        headers: new HttpHeaders({ 
-          'Authorization': authHeader,
-          'Content-Type': 'application/x-www-form-urlencoded' 
+    try {
+      const res: any = await firstValueFrom(
+        this.http.post(url, payload, {
+          headers: new HttpHeaders({ 
+            'Authorization': authHeader,
+            'Content-Type': 'application/x-www-form-urlencoded' 
+          })
         })
-      })
-    );
+      );
 
-    this.token.set(res.access_token);
-    return res.access_token;
+      this.token.set(res.access_token);
+      return res.access_token;
+    } catch (error) {
+      console.error('OAuth2 Token Exchange Failed:', error);
+      throw error;
+    }
   }
 
   getStoredToken() {
     return this.token();
+  }
+
+  getClientId(): string {
+    return this.CLIENT_ID;
   }
 }

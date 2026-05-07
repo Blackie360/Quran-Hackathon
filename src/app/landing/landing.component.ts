@@ -68,15 +68,7 @@ export class Landing {
   }
 
   async getStarted(): Promise<void> {
-    try {
-      const token = await this.authService.fetchToken();
-      
-      if (token) {
-        console.log('Authentication successful, navigating...');
-        this.router.navigate(['/chapters']);
-      }
-    } catch (error) {
-      console.error('Authentication failed:', error);
-    }
+    // No auth required for public API
+    this.router.navigate(['/chapters']);
   }
 }
