@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth'; 
 
 interface Feature {
   iconClass: string;
@@ -16,7 +17,10 @@ interface Feature {
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })
-export class LandingComponent {
+export class Landing {
+  private router = inject(Router);
+  private authService = inject(AuthService);
+
   features = signal<Feature[]>([
     {
       iconClass: 'fas fa-book',
@@ -56,8 +60,6 @@ export class LandingComponent {
     }
   ]);
 
-  constructor(private router: Router) {}
-
   scrollToFeatures(): void {
     const element = document.getElementById('features');
     if (element) {
@@ -65,7 +67,16 @@ export class LandingComponent {
     }
   }
 
-  getStarted(): void {
-    this.router.navigate(['/chapters']);
+  async getStarted(): Promise<void> {
+    try {
+      const token = await this.authService.fetchToken();
+      
+      if (token) {
+        console.log('Authentication successful, navigating...');
+        this.router.navigate(['/chapters']);
+      }
+    } catch (error) {
+      console.error('Authentication failed:', error);
+    }
   }
 }
