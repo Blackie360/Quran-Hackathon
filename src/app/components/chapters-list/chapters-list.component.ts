@@ -27,19 +27,34 @@ export class ChaptersListComponent implements OnInit {
   constructor(
     private quranService: QuranService,
     private router: Router
-  ) {}
+  ) {
+    console.log('ChaptersListComponent constructor called');
+    console.log('QuranService injected:', quranService);
+  }
 
   ngOnInit(): void {
+    console.log('ChaptersListComponent ngOnInit called');
     this.loadChapters();
   }
 
   loadChapters(): void {
     console.log('Starting to load chapters...');
-    this.quranService.getChapters('en').subscribe({
+    console.log('QuranService instance:', this.quranService);
+    console.log('About to call getChapters...');
+    const observable = this.quranService.getChapters('en');
+    console.log('Observable created:', observable);
+    observable.subscribe({
       next: (response: any) => {
         console.log('Chapters response received:', response);
-        if (response && response.data && Array.isArray(response.data)) {
-          this.chapters = response.data;
+        if (response && response.chapters && Array.isArray(response.chapters)) {
+          this.chapters = response.chapters.map((chapter: any) => ({
+            number: chapter.id,
+            name: chapter.name_arabic,
+            englishName: chapter.name_simple,
+            englishNameTranslation: chapter.translated_name?.name || chapter.name_simple,
+            numberOfAyahs: chapter.verses_count,
+            revelationType: chapter.revelation_place
+          }));
           console.log('Chapters loaded successfully:', this.chapters.length);
         } else {
           console.warn('Unexpected response structure:', response);
@@ -49,6 +64,7 @@ export class ChaptersListComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading chapters:', err);
+        console.error('Error details:', err.message, err.status, err.statusText);
         this.error = 'Failed to load chapters: ' + (err?.message || err?.status || 'Unknown error');
         this.isLoading = false;
       }

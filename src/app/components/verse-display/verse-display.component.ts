@@ -123,9 +123,9 @@ export class VerseDisplayComponent implements OnInit {
 
     const query = this.searchQuery.toLowerCase();
     this.filteredVerses = this.verses.filter(verse => {
-      const text = (verse.text || verse.text_uthmani || '').toLowerCase();
-      const translation = (verse.text_uthmani || '').toLowerCase();
-      return text.includes(query) || translation.includes(query);
+      const arabicText = (verse.text || '').toLowerCase();
+      const translation = (verse.translation || '').toLowerCase();
+      return arabicText.includes(query) || translation.includes(query);
     });
   }
 
@@ -139,11 +139,8 @@ export class VerseDisplayComponent implements OnInit {
   }
 
   getTranslationText(verse: any): string {
-    // Try different properties that might contain translation
-    if (verse.text && !verse.text.includes('سَ')) {
-      return verse.text;
-    }
-    return 'Translation not available';
+    // Use the translation property from combined API response
+    return verse.translation || 'Translation not available';
   }
 
   getArabicText(verse: any): string {
