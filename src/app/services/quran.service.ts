@@ -46,8 +46,8 @@ export interface Translator {
   providedIn: 'root'
 })
 export class QuranService {
-  // Using public Quran.com API
-  private apiUrl = 'https://api.quran.com/api/v4';
+  // Proxy through the local backend for API integration
+  private apiUrl = '/content-api';
 
   constructor(private http: HttpClient) {}
 

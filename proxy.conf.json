@@ -1,20 +1,14 @@
 {
   "/auth-api": {
-    "target": "https://oauth2.quran.foundation",
-    "secure": true,
+    "target": "http://localhost:3001/api",
+    "secure": false,
     "changeOrigin": true,
-    "pathRewrite": {
-      "^/auth-api": ""
-    },
     "logLevel": "debug"
   },
   "/content-api": {
-    "target": "https://api.quran.foundation",
-    "secure": true,
+    "target": "http://localhost:3001/api",
+    "secure": false,
     "changeOrigin": true,
-    "pathRewrite": {
-      "^/content-api": ""
-    },
     "logLevel": "debug"
   }
 }

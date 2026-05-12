@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
+    "dev:backend": "cd backend && PORT=3001 npm run dev",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
