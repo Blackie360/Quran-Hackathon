@@ -119,6 +119,22 @@
 
         <audio *ngIf="verse.audioUrl" class="verse-audio" controls [src]="verse.audioUrl"></audio>
 
+        <!-- AI Interpretation Button -->
+        <button class="ai-btn-inline" (click)="toggleAiInterpretation(verse)">
+          <i class="fas fa-sparkles"></i>
+          {{ verse.showAiInterpretation ? 'Hide' : 'Get' }} AI Interpretation
+        </button>
+
+        <!-- AI Interpretation Component -->
+        <app-ai-interpretation
+          [verseText]="verse.text"
+          [verseKey]="verse.verseKey"
+          [translation]="verse.translation"
+          [show]="verse.showAiInterpretation || false"
+          (apiKeyNeeded)="requestApiKey()"
+          (closed)="verse.showAiInterpretation = false"
+        ></app-ai-interpretation>
+
         <div *ngIf="verse.showWords" class="words-panel">
           <div *ngFor="let word of verse.words" class="word-pill">
             <span class="word-arabic">{{ word.text }}</span>
@@ -141,3 +157,8 @@
     </article>
   </div>
 </div>
+
+<!-- API Key Modal -->
+<app-api-key-modal
+  (apiKeySaved)="onApiKeySaved()"
+></app-api-key-modal>

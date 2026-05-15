@@ -571,3 +571,28 @@
     font-size: 14px;
   }
 }
+
+.ai-btn-inline {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 15px 0;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.ai-btn-inline:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.ai-btn-inline i {
+  font-size: 16px;
+}

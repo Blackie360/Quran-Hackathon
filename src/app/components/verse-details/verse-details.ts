@@ -1,18 +1,23 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuranService } from '../../services/quran.service';
 import { StudyStorageService, StudyVerse } from '../../services/study-storage.service';
+import { AiInterpretationComponent } from '../ai-interpretation/ai-interpretation.component';
+import { ApiKeyModalComponent } from '../api-key-modal/api-key-modal.component';
+import { GeminiAiService } from '../../services/gemini-ai.service';
 
 @Component({
   selector: 'app-verse-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AiInterpretationComponent, ApiKeyModalComponent],
   templateUrl: './verse-details.html',
   styleUrl: './verse-details.css'
 })
 export class VerseDetails implements OnInit {
+  @ViewChild(ApiKeyModalComponent) apiKeyModal!: ApiKeyModalComponent;
+
   chapterId = 0;
   verseNumber = 0;
   chapterName = '';
@@ -20,10 +25,12 @@ export class VerseDetails implements OnInit {
   note = '';
   isLoading = true;
   error: string | null = null;
+  showAiInterpretation = false;
 
   constructor(
     private quranService: QuranService,
     private studyStorage: StudyStorageService,
+    private geminiAi: GeminiAiService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -97,6 +104,18 @@ export class VerseDetails implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/verses', this.chapterId]);
+  }
+
+  toggleAiInterpretation(): void {
+    this.showAiInterpretation = !this.showAiInterpretation;
+  }
+
+  requestApiKey(): void {
+    this.apiKeyModal.openModal();
+  }
+
+  onApiKeySaved(): void {
+    // The API key has been saved, so the interpretation component will work now
   }
 
   private mapVerse(verse: any): any {

@@ -1,9 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuranService } from '../../services/quran.service';
 import { StudyStorageService, StudyVerse } from '../../services/study-storage.service';
+import { AiInterpretationComponent } from '../ai-interpretation/ai-interpretation.component';
+import { ApiKeyModalComponent } from '../api-key-modal/api-key-modal.component';
+import { GeminiAiService } from '../../services/gemini-ai.service';
 
 interface DisplayWord {
   text: string;
@@ -22,16 +25,18 @@ interface DisplayVerse {
   note: string;
   showWords: boolean;
   showNote: boolean;
+  showAiInterpretation?: boolean;
 }
 
 @Component({
   selector: 'app-verse-display',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AiInterpretationComponent, ApiKeyModalComponent],
   templateUrl: './verse-display.component.html',
   styleUrl: './verse-display.component.css'
 })
 export class VerseDisplayComponent implements OnInit {
+  @ViewChild(ApiKeyModalComponent) apiKeyModal!: ApiKeyModalComponent;
   chapterId = 0;
   chapterName = '';
   verses: DisplayVerse[] = [];
@@ -47,6 +52,7 @@ export class VerseDisplayComponent implements OnInit {
   constructor(
     private quranService: QuranService,
     private studyStorage: StudyStorageService,
+    private geminiAi: GeminiAiService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -260,5 +266,17 @@ export class VerseDisplayComponent implements OnInit {
       .replace(/<[^>]+>/g, '')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  toggleAiInterpretation(verse: DisplayVerse): void {
+    verse.showAiInterpretation = !verse.showAiInterpretation;
+  }
+
+  requestApiKey(): void {
+    this.apiKeyModal.openModal();
+  }
+
+  onApiKeySaved(): void {
+    // The API key has been saved, so the interpretation component will work now
   }
 }
