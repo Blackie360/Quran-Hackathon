@@ -28,25 +28,16 @@ export class ChaptersListComponent implements OnInit {
     private quranService: QuranService,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {
-    console.log('ChaptersListComponent constructor called');
-    console.log('QuranService injected:', quranService);
-  }
+  ) {}
 
   ngOnInit(): void {
-    console.log('ChaptersListComponent ngOnInit called');
     this.loadChapters();
   }
 
   loadChapters(): void {
-    console.log('Starting to load chapters...');
-    console.log('QuranService instance:', this.quranService);
-    console.log('About to call getChapters...');
     const observable = this.quranService.getChapters('en');
-    console.log('Observable created:', observable);
     observable.subscribe({
       next: (response: any) => {
-        console.log('Chapters response received:', response);
         if (response && response.chapters && Array.isArray(response.chapters)) {
           this.chapters = response.chapters.map((chapter: any) => ({
             number: chapter.id,
@@ -56,7 +47,6 @@ export class ChaptersListComponent implements OnInit {
             numberOfAyahs: chapter.verses_count,
             revelationType: chapter.revelation_place
           }));
-          console.log('Chapters loaded successfully:', this.chapters.length);
         } else {
           console.warn('Unexpected response structure:', response);
           this.error = 'Unexpected data format from server';
@@ -75,12 +65,18 @@ export class ChaptersListComponent implements OnInit {
   }
 
   selectChapter(chapterId: number): void {
-    console.log('Navigating to chapter:', chapterId);
     this.router.navigate(['/verses', chapterId]);
   }
 
   goBack(): void {
     this.router.navigate(['/']);
   }
-}
 
+  goToSearch(): void {
+    this.router.navigate(['/search']);
+  }
+
+  goToStudy(): void {
+    this.router.navigate(['/study']);
+  }
+}

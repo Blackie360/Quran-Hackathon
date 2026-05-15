@@ -144,13 +144,13 @@
       <div class="step-item">
         <div class="step-number">2</div>
         <h3 class="step-title">AI Analysis</h3>
-        <p class="step-description">Our AI analyzes the verse deeply</p>
+        <p class="step-description">Read word meanings and translation</p>
       </div>
 
       <div class="step-item">
         <div class="step-number">3</div>
         <h3 class="step-title">Get Insights</h3>
-        <p class="step-description">Receive translation and context</p>
+        <p class="step-description">Listen, bookmark, and take notes</p>
       </div>
 
       <div class="step-item">
@@ -177,12 +177,12 @@
     </p>
 
     <div class="cta-buttons">
-      <button class="btn btn-cta-primary">
+      <button class="btn btn-cta-primary" (click)="getStarted()">
         Launch App Now
       </button>
 
-      <button class="btn btn-cta-secondary">
-        Watch Demo
+      <button class="btn btn-cta-secondary" (click)="openSearch()">
+        Search Quran
       </button>
     </div>
 
@@ -253,4 +253,3 @@
 
   </div>
 </footer>
-

@@ -1,0 +1,47 @@
+<div class="search-page">
+  <div class="search-header">
+    <button class="back-btn" (click)="goBack()" title="Back to chapters">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1>Global Quran Search</h1>
+    <span></span>
+  </div>
+
+  <form class="search-panel" (ngSubmit)="search()">
+    <label for="global-search">Search by word, topic, or phrase</label>
+    <div class="search-row">
+      <input
+        id="global-search"
+        name="query"
+        [(ngModel)]="query"
+        placeholder="Try victory, mercy, prayer..."
+      />
+      <button type="submit" [disabled]="isLoading">
+        <i class="fas fa-search"></i>
+        Search
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="isLoading" class="skeleton-results">
+    <div *ngFor="let item of [1, 2, 3]" class="skeleton-result"></div>
+  </div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="!isLoading && hasSearched && results.length === 0 && !error" class="empty-state">
+    <i class="fas fa-search"></i>
+    <p>No matching verses found.</p>
+  </div>
+
+  <section *ngIf="!isLoading && results.length > 0" class="results-list">
+    <article *ngFor="let result of results" class="result-card" (click)="openResult(result)">
+      <div class="result-key">{{ result.verseKey }}</div>
+      <div class="result-body">
+        <p class="arabic-text">{{ result.text }}</p>
+        <p class="translation-text">{{ result.translation }}</p>
+      </div>
+      <i class="fas fa-chevron-right"></i>
+    </article>
+  </section>
+</div>

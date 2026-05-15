@@ -78,8 +78,21 @@ http://localhost:4200
 ```text
 http://localhost:4200/chapters
 http://localhost:4200/verses/110
+http://localhost:4200/verses/110/1
+http://localhost:4200/search
+http://localhost:4200/study
 http://localhost:3001/health
 ```
+
+## Implemented Features
+
+- Chapter browser for all 114 surahs.
+- Chapter verse reader with Arabic text, clean translation text, audio playback, and word-by-word meanings.
+- Translator selector using Quran.com translation resource IDs.
+- Global Quran search at `/search`.
+- Verse detail pages at `/verses/:chapterId/:verseNumber`.
+- Local study library with bookmarks, notes, and reading history at `/study`.
+- Empty, loading, error, invalid chapter, and 404 states.
 
 ## Verification
 

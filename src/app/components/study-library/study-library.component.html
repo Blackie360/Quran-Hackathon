@@ -1,0 +1,43 @@
+<div class="study-page">
+  <div class="study-header">
+    <button class="back-btn" (click)="goBack()" title="Back to chapters">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1>Study Library</h1>
+    <span></span>
+  </div>
+
+  <div class="tabs">
+    <button [class.active]="activeTab === 'bookmarks'" (click)="activeTab = 'bookmarks'">Bookmarks</button>
+    <button [class.active]="activeTab === 'notes'" (click)="activeTab = 'notes'">Notes</button>
+    <button [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">History</button>
+  </div>
+
+  <section *ngIf="activeTab === 'bookmarks'" class="library-list">
+    <div *ngIf="bookmarks.length === 0" class="empty-state">No bookmarks yet.</div>
+    <article *ngFor="let item of bookmarks" class="library-card" (click)="openVerse(item)">
+      <span class="verse-key">{{ item.verseKey }}</span>
+      <p class="arabic-text">{{ item.arabicText }}</p>
+      <p class="translation-text">{{ item.translation }}</p>
+    </article>
+  </section>
+
+  <section *ngIf="activeTab === 'notes'" class="library-list">
+    <div *ngIf="notes.length === 0" class="empty-state">No notes yet.</div>
+    <article *ngFor="let item of notes" class="library-card" (click)="openVerse(item)">
+      <span class="verse-key">{{ item.verseKey }}</span>
+      <p class="note-text">{{ item.note }}</p>
+      <p class="translation-text">{{ item.translation }}</p>
+    </article>
+  </section>
+
+  <section *ngIf="activeTab === 'history'" class="library-list">
+    <button *ngIf="history.length > 0" class="clear-history" (click)="clearHistory()">Clear history</button>
+    <div *ngIf="history.length === 0" class="empty-state">No reading history yet.</div>
+    <article *ngFor="let item of history" class="library-card" (click)="openVerse(item)">
+      <span class="verse-key">{{ item.verseKey }}</span>
+      <p class="arabic-text">{{ item.arabicText }}</p>
+      <p class="translation-text">{{ item.translation }}</p>
+    </article>
+  </section>
+</div>

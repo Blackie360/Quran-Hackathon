@@ -6,22 +6,23 @@ API credentials are now stored securely in environment files instead of being ha
 
 ### Frontend Setup
 
-1. **Create `.env.local`** in the project root:
-   ```bash
-   QURAN_CLIENT_ID=bc24919c-3fb9-4985-8746-8a42fc145de1
-   QURAN_CLIENT_SECRET=z70ITf1b6FEN6wHVUgFqQvqy.9
-   ```
+Do not put Quran API secrets in the Angular frontend. Browser code is public to users.
 
-2. The credentials are loaded from `src/environments/environment.ts` at runtime.
+The frontend should call the local proxy paths:
 
-3. **Important:** `.env.local` is in `.gitignore` and will never be committed.
+```text
+/content-api
+/auth-api
+```
+
+Angular forwards those paths to the backend through `proxy.conf.json`.
 
 ### Backend Setup
 
 1. **Create `.env.local`** in the `backend/` directory:
    ```bash
-   QURAN_CLIENT_ID=bc24919c-3fb9-4985-8746-8a42fc145de1
-   QURAN_CLIENT_SECRET=z70ITf1b6FEN6wHVUgFqQvqy.9
+   QURAN_CLIENT_ID=your-client-id
+   QURAN_CLIENT_SECRET=your-client-secret
    ```
 
 2. The backend can access these variables via `process.env.QURAN_CLIENT_ID` and `process.env.QURAN_CLIENT_SECRET`.

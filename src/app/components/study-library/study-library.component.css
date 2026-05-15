@@ -1,0 +1,120 @@
+.study-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.study-header {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.study-header h1 {
+  color: white;
+  text-align: center;
+  margin: 0;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.tabs,
+.library-list {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tabs {
+  background: rgba(255, 255, 255, 0.24);
+  padding: 6px;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.tabs button {
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.tabs button.active {
+  background: white;
+  color: #667eea;
+}
+
+.library-list {
+  display: grid;
+  gap: 14px;
+}
+
+.library-card,
+.empty-state {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.library-card {
+  cursor: pointer;
+}
+
+.verse-key {
+  color: #667eea;
+  font-weight: 800;
+}
+
+.arabic-text {
+  direction: rtl;
+  text-align: right;
+  font-size: 20px;
+  line-height: 1.8;
+  color: #333;
+  font-family: 'Traditional Arabic', 'Arabic Typesetting', serif;
+}
+
+.translation-text,
+.note-text {
+  color: #666;
+  line-height: 1.6;
+}
+
+.note-text {
+  border-left: 4px solid #667eea;
+  padding-left: 12px;
+  color: #333;
+  font-weight: 600;
+}
+
+.empty-state {
+  color: #666;
+  text-align: center;
+}
+
+.clear-history {
+  justify-self: end;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: white;
+  color: #764ba2;
+  cursor: pointer;
+  font-weight: 700;
+}

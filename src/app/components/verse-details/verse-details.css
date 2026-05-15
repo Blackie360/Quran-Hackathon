@@ -1,0 +1,153 @@
+.detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.detail-header {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  align-items: center;
+  margin-bottom: 24px;
+  color: white;
+  text-align: center;
+}
+
+.detail-header h1,
+.detail-header p {
+  margin: 0;
+}
+
+.back-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+}
+
+.detail-card,
+.loading-card,
+.error-message {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.loading-card,
+.error-message {
+  text-align: center;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #deddf2;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.detail-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.detail-actions button,
+.note-box button {
+  border: none;
+  border-radius: 8px;
+  background: #667eea;
+  color: white;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.arabic-text {
+  direction: rtl;
+  text-align: right;
+  font-size: 28px;
+  line-height: 2;
+  color: #333;
+  font-family: 'Traditional Arabic', 'Arabic Typesetting', serif;
+}
+
+.translation-text {
+  color: #555;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+audio {
+  width: 100%;
+  margin: 10px 0 20px;
+}
+
+h2 {
+  color: #333;
+  font-size: 18px;
+}
+
+.words-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.word-pill {
+  border: 1px solid #e9e8f5;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fbfbff;
+}
+
+.word-arabic {
+  display: block;
+  direction: rtl;
+  text-align: right;
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.word-pill span,
+.word-pill strong {
+  display: block;
+  color: #666;
+  font-size: 12px;
+}
+
+.word-pill strong {
+  color: #667eea;
+}
+
+.note-box {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.note-box label {
+  font-weight: 700;
+  color: #333;
+}
+
+.note-box textarea {
+  resize: vertical;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  padding: 10px;
+  font: inherit;
+}

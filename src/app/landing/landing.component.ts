@@ -1,7 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth'; 
 
 interface Feature {
   iconClass: string;
@@ -19,7 +18,6 @@ interface Feature {
 })
 export class Landing {
   private router = inject(Router);
-  private authService = inject(AuthService);
 
   features = signal<Feature[]>([
     {
@@ -30,8 +28,8 @@ export class Landing {
     },
     {
       iconClass: 'fas fa-brain',
-      title: 'AI Tafsir Assistant',
-      description: 'Ask "What does this verse mean?" and get comprehensive explanations, context, and real-life applications.',
+      title: 'Study Notes',
+      description: 'Save reflections beside verses and return to them from your study library.',
       color: 'from-blue-400 to-blue-600'
     },
     {
@@ -48,14 +46,14 @@ export class Landing {
     },
     {
       iconClass: 'fas fa-comments',
-      title: 'Ask the Quran AI Chat',
-      description: 'Have a natural conversation with our AI to explore Islamic teachings on any topic.',
+      title: 'Bookmarks & History',
+      description: 'Keep track of important verses and reopen recently studied ayat quickly.',
       color: 'from-violet-400 to-purple-600'
     },
     {
       iconClass: 'fas fa-leaf',
-      title: 'Daily Ayah Insight',
-      description: 'Receive one inspirational verse daily with reflections and practical wisdom for your life.',
+      title: 'Verse Details',
+      description: 'Open a focused verse view with audio, word meanings, translation, and notes.',
       color: 'from-teal-400 to-cyan-600'
     }
   ]);
@@ -70,5 +68,9 @@ export class Landing {
   async getStarted(): Promise<void> {
     // No auth required for public API
     this.router.navigate(['/chapters']);
+  }
+
+  openSearch(): void {
+    this.router.navigate(['/search']);
   }
 }

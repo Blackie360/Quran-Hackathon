@@ -1,1 +1,49 @@
-<p>verse-details works!</p>
+<div class="detail-page">
+  <div class="detail-header">
+    <button class="back-btn" (click)="goBack()" title="Back to chapter">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <div>
+      <h1>{{ chapterName || 'Verse Detail' }}</h1>
+      <p *ngIf="verse">{{ verse.verseKey }}</p>
+    </div>
+    <span></span>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-card">
+    <div class="spinner"></div>
+    <p>Loading verse detail...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <article *ngIf="!isLoading && !error && verse" class="detail-card">
+    <div class="detail-actions">
+      <button (click)="toggleBookmark()">
+        <i [class]="isBookmarked() ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
+        {{ isBookmarked() ? 'Bookmarked' : 'Bookmark' }}
+      </button>
+    </div>
+
+    <p class="arabic-text">{{ verse.text }}</p>
+    <p class="translation-text">{{ verse.translation }}</p>
+    <audio *ngIf="verse.audioUrl" controls [src]="verse.audioUrl"></audio>
+
+    <h2>Word-by-word</h2>
+    <div class="words-grid">
+      <div *ngFor="let word of verse.words" class="word-pill">
+        <span class="word-arabic">{{ word.text }}</span>
+        <span>{{ word.transliteration }}</span>
+        <strong>{{ word.translation }}</strong>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <label for="detail-note">Study note</label>
+      <textarea id="detail-note" [(ngModel)]="note" rows="4"></textarea>
+      <button (click)="saveNote()">Save note</button>
+    </div>
+  </article>
+</div>

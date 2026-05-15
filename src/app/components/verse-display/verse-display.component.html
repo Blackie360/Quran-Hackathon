@@ -1,24 +1,28 @@
 <div class="verse-container">
-  <!-- Header -->
   <div class="verse-header">
-    <button class="back-btn" (click)="goBack()" title="Go back">
+    <button class="back-btn" (click)="goBack()" title="Back to chapters">
       <i class="fas fa-arrow-left"></i>
     </button>
     <div class="header-content">
-      <h1>{{ chapterName }}</h1>
+      <h1>{{ chapterName || 'Loading chapter' }}</h1>
       <p class="verse-subtitle">Chapter {{ chapterId }}</p>
     </div>
-    <div class="header-space"></div>
+    <div class="header-actions">
+      <button class="icon-btn" (click)="goToSearch()" title="Global search">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="icon-btn" (click)="goToStudy()" title="Study library">
+        <i class="fas fa-bookmark"></i>
+      </button>
+    </div>
   </div>
 
-  <!-- Controls -->
-  <div class="controls-section">
-    <!-- Search Bar -->
+  <div *ngIf="!error" class="controls-section">
     <div class="search-box">
       <i class="fas fa-search"></i>
       <input
         type="text"
-        placeholder="Search verses..."
+        placeholder="Search this chapter..."
         [(ngModel)]="searchQuery"
         (input)="searchVerses()"
         class="search-input"
@@ -33,14 +37,14 @@
       </button>
     </div>
 
-    <!-- Translator Selection -->
     <div class="translator-selector">
-      <label for="translator">Translator:</label>
+      <label for="translator">Translator</label>
       <select
         id="translator"
         [(ngModel)]="selectedTranslation"
         (change)="onTranslationChange()"
         class="translator-dropdown"
+        [disabled]="isLoadingTranslations"
       >
         <option value="" disabled>Select translator</option>
         <option *ngFor="let trans of translations" [value]="trans.id">
@@ -51,45 +55,89 @@
         <i class="fas fa-spinner"></i>
       </div>
     </div>
+
+    <audio *ngIf="chapterAudioUrl" class="chapter-audio" controls [src]="chapterAudioUrl"></audio>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading">
-    <div class="spinner"></div>
-    <p>Loading verses...</p>
+  <div *ngIf="isLoading" class="skeleton-list" aria-label="Loading verses">
+    <div class="skeleton-card" *ngFor="let item of [1, 2, 3]">
+      <div class="skeleton-dot"></div>
+      <div class="skeleton-lines">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="error" class="error-message">
     <i class="fas fa-exclamation-circle"></i>
     <p>{{ error }}</p>
+    <button class="retry-btn" (click)="goBack()">Choose another chapter</button>
   </div>
 
-  <!-- Verses List -->
   <div *ngIf="!isLoading && !error" class="verses-list">
     <div *ngIf="filteredVerses.length === 0" class="no-results">
       <i class="fas fa-search"></i>
       <p>No verses found matching your search.</p>
     </div>
 
-    <div
-      *ngFor="let verse of filteredVerses"
-      class="verse-card"
-    >
-      <div class="verse-number">{{ verse.numberInSurah || verse.verse_number }}</div>
+    <article *ngFor="let verse of filteredVerses" class="verse-card">
+      <div class="verse-number">{{ verse.numberInSurah }}</div>
 
       <div class="verse-content">
-        <!-- Arabic Text -->
+        <div class="verse-card-header">
+          <span class="verse-key">{{ verse.verseKey }}</span>
+          <div class="verse-actions">
+            <button class="chip-btn" (click)="toggleWords(verse)">
+              <i class="fas fa-language"></i>
+              Words
+            </button>
+            <button class="chip-btn" (click)="toggleBookmark(verse)">
+              <i [class]="isBookmarked(verse) ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
+              {{ isBookmarked(verse) ? 'Saved' : 'Save' }}
+            </button>
+            <button class="chip-btn" (click)="toggleNote(verse)">
+              <i class="fas fa-pen"></i>
+              Note
+            </button>
+            <button class="chip-btn" (click)="openVerse(verse)">
+              <i class="fas fa-arrow-right"></i>
+              Detail
+            </button>
+          </div>
+        </div>
+
         <div class="arabic-text">
           {{ verse.text || 'Text not available' }}
         </div>
 
-        <!-- Translation -->
         <div class="translation-text">
-          <strong>Translation:</strong>
+          <strong>Translation</strong>
           {{ getTranslationText(verse) }}
         </div>
+
+        <audio *ngIf="verse.audioUrl" class="verse-audio" controls [src]="verse.audioUrl"></audio>
+
+        <div *ngIf="verse.showWords" class="words-panel">
+          <div *ngFor="let word of verse.words" class="word-pill">
+            <span class="word-arabic">{{ word.text }}</span>
+            <span class="word-transliteration">{{ word.transliteration }}</span>
+            <span class="word-meaning">{{ word.translation }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="verse.showNote" class="note-panel">
+          <label [for]="'note-' + verse.verseKey">Study note</label>
+          <textarea
+            [id]="'note-' + verse.verseKey"
+            [(ngModel)]="verse.note"
+            rows="3"
+            placeholder="Write your reflection or reminder..."
+          ></textarea>
+          <button class="save-note-btn" (click)="saveNote(verse)">Save note</button>
+        </div>
       </div>
-    </div>
+    </article>
   </div>
 </div>

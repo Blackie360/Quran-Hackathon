@@ -5,13 +5,20 @@
       <i class="fas fa-arrow-left"></i>
     </button>
     <h1>Quran Chapters</h1>
-    <div class="header-space"></div>
+    <div class="header-actions">
+      <button class="icon-btn" (click)="goToSearch()" title="Global search">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="icon-btn" (click)="goToStudy()" title="Study library">
+        <i class="fas fa-bookmark"></i>
+      </button>
+    </div>
   </div>
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading">
     <div class="spinner"></div>
-    <p>Loading chapters... Component is working!</p>
+    <p>Loading chapters...</p>
   </div>
 
   <!-- Error State -->

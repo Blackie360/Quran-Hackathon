@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export interface Chapter {
   id: number;
@@ -60,11 +59,11 @@ export class QuranService {
   }
 
   getChapterVerses(chapterId: number, edition: string = 'quran-uthmani'): Observable<any> {
-    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=false&translations=false&audio=false&tafsirs=false&fields=text_uthmani&page=1&per_page=50`);
+    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=true&translations=false&audio=7&tafsirs=false&fields=text_uthmani&page=1&per_page=300`);
   }
 
   searchVerses(query: string, size: number = 50): Observable<any> {
-    return this.http.get(`${this.apiUrl}/search?q=${query}&size=${size}`);
+    return this.http.get(`${this.apiUrl}/search?q=${encodeURIComponent(query)}&size=${size}&language=en`);
   }
 
   getTranslations(): Observable<any> {
@@ -77,10 +76,14 @@ export class QuranService {
     arabicEdition: string = 'quran-uthmani'
   ): Observable<any> {
     // Get verses with translation
-    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=false&translations=${edition}&audio=false&tafsirs=false&fields=text_uthmani&page=1&per_page=50`);
+    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=true&translations=${edition}&audio=7&tafsirs=false&fields=text_uthmani&page=1&per_page=300`);
   }
 
   getEditions(): Observable<any> {
     return this.http.get(`${this.apiUrl}/resources/translations`);
+  }
+
+  getChapterAudio(chapterId: number, recitationId: number = 7): Observable<any> {
+    return this.http.get(`${this.apiUrl}/chapter_recitations/${recitationId}/${chapterId}`);
   }
 }
