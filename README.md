@@ -40,6 +40,21 @@ During development, Angular uses `proxy.conf.json` to forward those calls to the
 
 The chapters and verses pages do not need OAuth. They use the public Quran content API through the backend proxy.
 
+## Quran Foundation API Coverage
+
+This project uses at least three Quran Foundation documented API areas. Current coverage is:
+
+| API area | Endpoint used through local proxy | App usage | Code |
+| --- | --- | --- | --- |
+| Chapters API | `/content-api/chapters`, `/content-api/chapters/:id` | Chapter browser and chapter title lookup | `src/app/services/quran.service.ts` |
+| Verses API | `/content-api/verses/by_chapter/:chapterId` | Arabic verse text, translations, word-by-word data, and verse audio segments | `src/app/services/quran.service.ts` |
+| Audio API | `/content-api/chapter_recitations/:recitationId/:chapterId` | Chapter recitation player | `src/app/services/quran.service.ts` |
+| Resources API | `/content-api/resources/translations` | Translator dropdown | `src/app/services/quran.service.ts` |
+| Search API | `/content-api/search` | Global Quran search page | `src/app/components/global-search/` |
+| OAuth2 API proxy | `/auth-api/oauth2/token` | Backend proxy support for future authenticated user APIs | `backend/server.js` |
+
+The study library currently stores bookmarks, notes, and reading history locally in `localStorage`. Quran Foundation user-related APIs for server-side bookmarks, notes, and reading sessions require OAuth access tokens plus `x-auth-token` and `x-client-id` headers, so those are not called directly from the browser.
+
 ## Run Locally
 
 Start the backend:
