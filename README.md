@@ -1,59 +1,99 @@
-# Quranhackathon
+# Quran Hackathon
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+Angular frontend with a small Node.js backend proxy for Quran.com API requests.
 
-## Development server
+## Screenshots
 
-To start a local development server, run:
+### Fixed Chapters Page
 
-```bash
-ng serve
+![Fixed chapters page](screenshots/chapters-after-fix.png)
+
+### Fixed Verse Page
+
+![Fixed verse page for chapter 110](screenshots/verses-110-after-fix.png)
+
+## Project Structure
+
+```text
+Quran-Hackathon/
+├── src/                  # Angular frontend
+├── backend/              # Node.js backend proxy
+├── proxy.conf.json       # Angular dev proxy config
+└── screenshots/          # Verification screenshots
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## How The Frontend Connects To The Backend
 
-## Code scaffolding
+The frontend calls relative API paths:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+/content-api
+/auth-api
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+During development, Angular uses `proxy.conf.json` to forward those calls to the Node backend:
 
-```bash
-ng generate --help
+```text
+/content-api/* -> http://localhost:3001/api/content-api/*
+/auth-api/*    -> http://localhost:3001/api/auth-api/*
 ```
 
-## Building
+The chapters and verses pages do not need OAuth. They use the public Quran content API through the backend proxy.
 
-To build the project run:
+## Run Locally
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Start the backend:
 
 ```bash
-ng test
+cd backend
+npm run dev
 ```
 
-## Running end-to-end tests
+The backend runs at:
 
-For end-to-end (e2e) testing, run:
+```text
+http://localhost:3001
+```
+
+Start the frontend in another terminal from the project root:
 
 ```bash
-ng e2e
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The frontend runs at:
 
-## Additional Resources
+```text
+http://localhost:4200
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Open:
+
+```text
+http://localhost:4200
+```
+
+## Useful URLs
+
+```text
+http://localhost:4200/chapters
+http://localhost:4200/verses/110
+http://localhost:3001/health
+```
+
+## Verification
+
+The fixed pages were verified with:
+
+```bash
+npm run build
+```
+
+Current known build warnings are CSS budget warnings for:
+
+```text
+src/app/landing/landing.component.css
+src/app/components/verse-display/verse-display.component.css
+```
+
+The build still completes successfully.

@@ -60,7 +60,7 @@ export class QuranService {
   }
 
   getChapterVerses(chapterId: number, edition: string = 'quran-uthmani'): Observable<any> {
-    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=false&translations=false&audio=false&tafsirs=false&word_fields=text_uthmani&page=1&per_page=50`);
+    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=false&translations=false&audio=false&tafsirs=false&fields=text_uthmani&page=1&per_page=50`);
   }
 
   searchVerses(query: string, size: number = 50): Observable<any> {
@@ -77,11 +77,10 @@ export class QuranService {
     arabicEdition: string = 'quran-uthmani'
   ): Observable<any> {
     // Get verses with translation
-    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=false&translations=${edition}&audio=false&tafsirs=false&page=1&per_page=50`);
+    return this.http.get(`${this.apiUrl}/verses/by_chapter/${chapterId}?language=en&words=false&translations=${edition}&audio=false&tafsirs=false&fields=text_uthmani&page=1&per_page=50`);
   }
 
   getEditions(): Observable<any> {
     return this.http.get(`${this.apiUrl}/resources/translations`);
   }
 }
-

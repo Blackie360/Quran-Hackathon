@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QuranService, Verse } from '../../services/quran.service';
+import { QuranService } from '../../services/quran.service';
 
 @Component({
   selector: 'app-verse-display',
@@ -17,7 +17,7 @@ export class VerseDisplayComponent implements OnInit {
   verses: any[] = [];
   filteredVerses: any[] = [];
   translations: any[] = [];
-  selectedTranslation: string = 'en.sahih'; // Default English translation
+  selectedTranslation: string = '20'; // Saheeh International translation resource ID
   searchQuery: string = '';
   isLoading = true;
   isLoadingTranslations = true;
@@ -27,12 +27,13 @@ export class VerseDisplayComponent implements OnInit {
   constructor(
     private quranService: QuranService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.chapterId = params['chapterId'];
+      this.chapterId = Number(params['chapterId']);
       this.loadChapter();
       this.loadVerses();
     });
@@ -42,9 +43,10 @@ export class VerseDisplayComponent implements OnInit {
   loadChapter(): void {
     this.quranService.getChapter(this.chapterId, 'en').subscribe({
       next: (response: any) => {
-        if (response.data) {
-          this.chapterName = response.data.englishName || response.data.name;
+        if (response.chapter) {
+          this.chapterName = response.chapter.name_simple || response.chapter.name_arabic;
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading chapter:', err);
@@ -55,19 +57,21 @@ export class VerseDisplayComponent implements OnInit {
   loadVerses(): void {
     this.quranService.getChapterVerses(this.chapterId, 'quran-uthmani').subscribe({
       next: (response: any) => {
-        if (response.data && response.data.ayahs) {
-          this.arabicVerses = response.data.ayahs;
+        if (Array.isArray(response.verses)) {
+          this.arabicVerses = response.verses.map((verse: any) => this.mapVerse(verse));
           this.verses = this.arabicVerses;
           this.filteredVerses = this.verses;
           // Load with translation
           this.loadVersesWithTranslation();
         }
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.error = 'Failed to load verses. Please try again.';
         this.isLoading = false;
         console.error(err);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -78,15 +82,17 @@ export class VerseDisplayComponent implements OnInit {
       .getChapterVersesWithTranslation(this.chapterId, this.selectedTranslation, arabicEdition)
       .subscribe({
         next: (response: any) => {
-          if (response.data && response.data.ayahs) {
-            this.verses = response.data.ayahs;
+          if (Array.isArray(response.verses)) {
+            this.verses = response.verses.map((verse: any) => this.mapVerse(verse));
             this.filteredVerses = this.verses;
           }
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error loading verses with translation:', err);
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -94,17 +100,19 @@ export class VerseDisplayComponent implements OnInit {
   loadTranslations(): void {
     this.quranService.getEditions().subscribe({
       next: (response: any) => {
-        if (response.data) {
+        if (Array.isArray(response.translations)) {
           // Filter for English translations only
-          this.translations = response.data.filter(
-            (t: any) => t.type === 'translation' && t.language === 'en'
+          this.translations = response.translations.filter(
+            (translation: any) => translation.language_name === 'english'
           );
         }
         this.isLoadingTranslations = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading translations:', err);
         this.isLoadingTranslations = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -127,6 +135,7 @@ export class VerseDisplayComponent implements OnInit {
       const translation = (verse.translation || '').toLowerCase();
       return arabicText.includes(query) || translation.includes(query);
     });
+    this.cdr.detectChanges();
   }
 
   clearSearch(): void {
@@ -145,5 +154,14 @@ export class VerseDisplayComponent implements OnInit {
 
   getArabicText(verse: any): string {
     return verse.text || 'Text not available';
+  }
+
+  private mapVerse(verse: any): any {
+    return {
+      ...verse,
+      numberInSurah: verse.verse_number,
+      text: verse.text_uthmani || verse.text_indopak || verse.text || '',
+      translation: verse.translations?.[0]?.text || ''
+    };
   }
 }

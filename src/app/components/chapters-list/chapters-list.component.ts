@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { QuranService } from '../../services/quran.service';
@@ -26,7 +26,8 @@ export class ChaptersListComponent implements OnInit {
 
   constructor(
     private quranService: QuranService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     console.log('ChaptersListComponent constructor called');
     console.log('QuranService injected:', quranService);
@@ -61,12 +62,14 @@ export class ChaptersListComponent implements OnInit {
           this.error = 'Unexpected data format from server';
         }
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         console.error('Error loading chapters:', err);
         console.error('Error details:', err.message, err.status, err.statusText);
         this.error = 'Failed to load chapters: ' + (err?.message || err?.status || 'Unknown error');
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -80,5 +83,4 @@ export class ChaptersListComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
-
 

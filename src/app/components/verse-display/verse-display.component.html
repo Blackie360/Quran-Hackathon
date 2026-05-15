@@ -43,8 +43,8 @@
         class="translator-dropdown"
       >
         <option value="" disabled>Select translator</option>
-        <option *ngFor="let trans of translations" [value]="trans.identifier">
-          {{ trans.englishName || trans.name }}
+        <option *ngFor="let trans of translations" [value]="trans.id">
+          {{ trans.name || trans.author_name }}
         </option>
       </select>
       <div *ngIf="isLoadingTranslations" class="loading-spinner-small">
@@ -76,7 +76,7 @@
       *ngFor="let verse of filteredVerses"
       class="verse-card"
     >
-      <div class="verse-number">{{ verse.numberInSurah || verse.ayahNumber }}</div>
+      <div class="verse-number">{{ verse.numberInSurah || verse.verse_number }}</div>
 
       <div class="verse-content">
         <!-- Arabic Text -->
