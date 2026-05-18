@@ -1,6 +1,8 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ApiKeyModalComponent } from '../components/api-key-modal/api-key-modal.component';
+import { GeminiAiService } from '../services/gemini-ai.service';
 
 interface Feature {
   iconClass: string;
@@ -12,12 +14,15 @@ interface Feature {
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ApiKeyModalComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })
 export class Landing {
+  @ViewChild(ApiKeyModalComponent) apiKeyModal!: ApiKeyModalComponent;
+
   private router = inject(Router);
+  private geminiAi = inject(GeminiAiService);
 
   features = signal<Feature[]>([
     {
@@ -66,7 +71,15 @@ export class Landing {
   }
 
   async getStarted(): Promise<void> {
-    // No auth required for public API
+    // Check if API key exists, if not show modal first
+    if (!this.geminiAi.hasApiKey()) {
+      this.apiKeyModal.openModal();
+    } else {
+      this.router.navigate(['/chapters']);
+    }
+  }
+
+  onApiKeySaved(): void {
     this.router.navigate(['/chapters']);
   }
 

@@ -31,6 +31,22 @@
     <p class="translation-text">{{ verse.translation }}</p>
     <audio *ngIf="verse.audioUrl" controls [src]="verse.audioUrl"></audio>
 
+    <!-- AI Interpretation Toggle Button -->
+    <button class="ai-btn" (click)="toggleAiInterpretation()">
+      <i class="fas fa-sparkles"></i>
+      {{ showAiInterpretation ? 'Hide' : 'Get' }} AI Interpretation
+    </button>
+
+    <!-- AI Interpretation Component -->
+    <app-ai-interpretation
+      [verseText]="verse.text"
+      [verseKey]="verse.verseKey"
+      [translation]="verse.translation"
+      [show]="showAiInterpretation"
+      (apiKeyNeeded)="requestApiKey()"
+      (closed)="showAiInterpretation = false"
+    ></app-ai-interpretation>
+
     <h2>Word-by-word</h2>
     <div class="words-grid">
       <div *ngFor="let word of verse.words" class="word-pill">
@@ -47,3 +63,8 @@
     </div>
   </article>
 </div>
+
+<!-- API Key Modal -->
+<app-api-key-modal
+  (apiKeySaved)="onApiKeySaved()"
+></app-api-key-modal>
