@@ -12,6 +12,14 @@ Angular frontend with a small Node.js backend proxy for Quran.com API requests.
 
 ![Fixed verse page for chapter 110](screenshots/verses-110-after-fix.png)
 
+### AI English Translation On Verse List
+
+![AI English translation panel on the chapter verse list](screenshots/ai-translation-verse-list.png)
+
+### AI English Translation On Verse Detail
+
+![AI English translation panel on the verse detail page](screenshots/ai-translation-verse-detail.png)
+
 ## Project Structure
 
 ```text

@@ -10,5 +10,11 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/ai-api": {
+    "target": "http://localhost:3001/api",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }

@@ -26,6 +26,7 @@ export class VerseDetails implements OnInit {
   isLoading = true;
   error: string | null = null;
   showAiInterpretation = false;
+  showAiTranslation = false;
 
   constructor(
     private quranService: QuranService,
@@ -108,6 +109,10 @@ export class VerseDetails implements OnInit {
 
   toggleAiInterpretation(): void {
     this.showAiInterpretation = !this.showAiInterpretation;
+  }
+
+  toggleAiTranslation(): void {
+    this.showAiTranslation = !this.showAiTranslation;
   }
 
   requestApiKey(): void {

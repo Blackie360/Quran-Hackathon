@@ -1,69 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeminiAiService {
-  private readonly STORAGE_KEY = 'gemini_api_key';
-  private readonly apiKey$ = new BehaviorSubject<string>(environment.geminiApiKey || '');
-  private readonly GEMINI_API_URL = environment.geminiModelUrl;
+  private readonly aiApiUrl = '/ai-api/gemini';
 
-  constructor(private http: HttpClient) {
-    if (!this.apiKey$.value) {
-      this.loadApiKeyFromStorage();
-    }
-  }
+  constructor(private http: HttpClient) {}
 
   setApiKey(apiKey: string): void {
-    if (apiKey) {
-      this.apiKey$.next(apiKey);
-      localStorage.setItem(this.STORAGE_KEY, apiKey);
-    }
+    console.warn('Gemini API keys are configured on the backend and are not stored in the browser.');
   }
 
   getApiKey(): string {
-    return this.apiKey$.value;
+    return '';
   }
 
   hasApiKey(): boolean {
-    return !!this.apiKey$.value;
+    return true;
   }
 
   clearApiKey(): void {
-    this.apiKey$.next('');
-    localStorage.removeItem(this.STORAGE_KEY);
-  }
-
-  private loadApiKeyFromStorage(): void {
-    const storedKey = localStorage.getItem(this.STORAGE_KEY);
-    if (storedKey) {
-      this.apiKey$.next(storedKey);
-    }
+    localStorage.removeItem('gemini_api_key');
   }
 
   interpretVerse(verseText: string, verseKey: string, translation?: string): Observable<any> {
-    if (!this.apiKey$.value) {
-      throw new Error('Gemini API key not set');
-    }
-
-    const prompt = this.buildPrompt(verseText, verseKey, translation);
-
     return this.http.post<any>(
-      `${this.GEMINI_API_URL}?key=${encodeURIComponent(this.apiKey$.value)}`,
+      `${this.aiApiUrl}/interpret`,
       {
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt
-              }
-            ]
-          }
-        ]
+        verseText,
+        verseKey,
+        translation
       }
     ).pipe(
       catchError(error => {
@@ -73,22 +43,19 @@ export class GeminiAiService {
     );
   }
 
-  private buildPrompt(verseText: string, verseKey: string, translation?: string): string {
-    const translationText = translation ? `\n\nEnglish Translation:\n${translation}` : '';
-
-    return `You are an Islamic scholar and Quran interpreter. Provide a comprehensive but concise interpretation of the following Quranic verse:
-
-Verse Reference: ${verseKey}
-Arabic Text: ${verseText}${translationText}
-
-Please provide:
-1. **Context**: Historical and contextual background
-2. **Meaning**: Deep explanation of the verse's meaning
-3. **Key Themes**: Main themes and concepts
-4. **Spiritual Lesson**: What Muslims can learn from this verse
-5. **Modern Application**: How this verse applies to contemporary life
-
-Keep the response clear, respectful, and academically sound. Use simple language while maintaining depth.`;
+  translateVerseToEnglish(verseText: string, verseKey: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.aiApiUrl}/translate`,
+      {
+        verseText,
+        verseKey
+      }
+    ).pipe(
+      catchError(error => {
+        console.error('Error calling Gemini API:', error);
+        throw error;
+      })
+    );
   }
 
  

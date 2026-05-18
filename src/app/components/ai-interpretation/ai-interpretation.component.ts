@@ -11,7 +11,7 @@ import { GeminiAiService } from '../../services/gemini-ai.service';
       <div class="interpretation-header">
         <div class="header-left">
           <i class="fas fa-sparkles"></i>
-          <h3>AI Interpretation</h3>
+          <h3>{{ title }}</h3>
         </div>
         <button class="close-btn" (click)="close()" title="Close">
           <i class="fas fa-times"></i>
@@ -22,7 +22,7 @@ import { GeminiAiService } from '../../services/gemini-ai.service';
         <!-- Loading State -->
         <div *ngIf="isLoading" class="loading-state">
           <div class="spinner"></div>
-          <p>Getting AI interpretation...</p>
+          <p>Getting {{ label }}...</p>
         </div>
 
         <!-- Error State -->
@@ -42,7 +42,7 @@ import { GeminiAiService } from '../../services/gemini-ai.service';
         <!-- No API Key State -->
         <div *ngIf="showApiKeyPrompt" class="api-key-prompt">
           <i class="fas fa-key"></i>
-          <p>Enable AI interpretation by setting up your Gemini API key</p>
+          <p>Enable AI {{ label }} by setting up your Gemini API key</p>
           <button class="btn btn-primary" (click)="requestApiKey()">
             <i class="fas fa-cog"></i> Configure API Key
           </button>
@@ -246,6 +246,7 @@ export class AiInterpretationComponent implements OnInit, OnChanges {
   @Input() verseKey: string = '';
   @Input() translation: string = '';
   @Input() show: boolean = false;
+  @Input() mode: 'interpretation' | 'translation' = 'interpretation';
 
   @Output() apiKeyNeeded = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
@@ -256,6 +257,14 @@ export class AiInterpretationComponent implements OnInit, OnChanges {
   showApiKeyPrompt = false;
 
   private geminiAi = inject(GeminiAiService);
+
+  get title(): string {
+    return this.mode === 'translation' ? 'AI English Translation' : 'AI Interpretation';
+  }
+
+  get label(): string {
+    return this.mode === 'translation' ? 'translation' : 'interpretation';
+  }
 
   ngOnInit(): void {
     this.checkApiKey();
@@ -288,7 +297,11 @@ export class AiInterpretationComponent implements OnInit, OnChanges {
     this.error = null;
     this.interpretation = '';
 
-    this.geminiAi.interpretVerse(this.verseText, this.verseKey, this.translation).subscribe({
+    const request$ = this.mode === 'translation'
+      ? this.geminiAi.translateVerseToEnglish(this.verseText, this.verseKey)
+      : this.geminiAi.interpretVerse(this.verseText, this.verseKey, this.translation);
+
+    request$.subscribe({
       next: (response) => {
         this.interpretation = this.geminiAi.parseResponse(response);
         this.isLoading = false;
@@ -296,7 +309,7 @@ export class AiInterpretationComponent implements OnInit, OnChanges {
       error: (error) => {
         console.error('Error getting interpretation:', error);
         this.isLoading = false;
-        this.error = error.error?.error?.message || 'Failed to get interpretation. Please check your API key and try again.';
+        this.error = error.error?.error?.message || error.error?.error || `Failed to get ${this.label}. Please try again.`;
       }
     });
   }

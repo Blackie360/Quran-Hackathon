@@ -31,6 +31,20 @@
     <p class="translation-text">{{ verse.translation }}</p>
     <audio *ngIf="verse.audioUrl" controls [src]="verse.audioUrl"></audio>
 
+    <button class="ai-btn" (click)="toggleAiTranslation()">
+      <i class="fas fa-language"></i>
+      {{ showAiTranslation ? 'Hide' : 'Get' }} AI English Translation
+    </button>
+
+    <app-ai-interpretation
+      mode="translation"
+      [verseText]="verse.text"
+      [verseKey]="verse.verseKey"
+      [show]="showAiTranslation"
+      (apiKeyNeeded)="requestApiKey()"
+      (closed)="showAiTranslation = false"
+    ></app-ai-interpretation>
+
     <!-- AI Interpretation Toggle Button -->
     <button class="ai-btn" (click)="toggleAiInterpretation()">
       <i class="fas fa-sparkles"></i>

@@ -26,6 +26,7 @@ interface DisplayVerse {
   showWords: boolean;
   showNote: boolean;
   showAiInterpretation?: boolean;
+  showAiTranslation?: boolean;
 }
 
 @Component({
@@ -270,6 +271,10 @@ export class VerseDisplayComponent implements OnInit {
 
   toggleAiInterpretation(verse: DisplayVerse): void {
     verse.showAiInterpretation = !verse.showAiInterpretation;
+  }
+
+  toggleAiTranslation(verse: DisplayVerse): void {
+    verse.showAiTranslation = !verse.showAiTranslation;
   }
 
   requestApiKey(): void {
